@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+
 import Navbar from "./common/navBar";
+import Box from "./dashboard/box";
 
 const DashStyle = styled.div`
 	.dashboard {
@@ -10,6 +12,12 @@ const DashStyle = styled.div`
 	.dashboard__content {
 		margin-left: 250px;
 		padding: 20px;
+	}
+
+	.table td {
+		width: 200px;
+		height: 200px;
+		padding: 25px;
 	}
 
 	@media only screen and (max-width: 768px) {
@@ -34,6 +42,26 @@ const Dashboard = () => {
 						<p>
 							Here you can see your latest updates and messages.
 						</p>
+						<table className="table">
+							<tbody>
+								<tr>
+									<td>
+										<Box title="Users" body="Lorem" />
+									</td>
+									<td>
+										<Box title="Branches" body="Lorem" />
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<Box title="Items" body="Lorem" />
+									</td>
+									<td>
+										<Box title="Deliveries" body="Lorem" />
+									</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</DashStyle>

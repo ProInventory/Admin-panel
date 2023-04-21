@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
+import Logo from "./logo";
+
 const NavStyle = styled.nav`
 	.navbar {
 		position: fixed;
@@ -9,14 +11,20 @@ const NavStyle = styled.nav`
 		left: 0;
 		bottom: 0;
 		width: 250px;
-		background-color: #b19cd8;
+		background-color: #808080;
 		overflow-y: auto;
+	}
+
+	.logo {
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 
 	.navbar__links {
 		list-style: none;
 		margin: 0;
-		padding: 20px;
+		padding: 30px;
 	}
 
 	.navbar__item {
@@ -62,6 +70,9 @@ const Navbar = () => {
 		<React.Fragment>
 			<NavStyle>
 				<nav className="navbar">
+					<div className="logo">
+						<Logo />
+					</div>
 					<ul className="navbar__links">
 						<li className="navbar__item">
 							<Link to="/" className="navbar__link">
