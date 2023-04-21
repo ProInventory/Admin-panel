@@ -1,10 +1,14 @@
+import { Routes, Route } from "react-router-dom";
+
 import Dashboard from "./components/dashboard";
+import NotFound from "./components/404";
 
 function App() {
 	return (
-		<div className="App">
-			<Dashboard />
-		</div>
+		<Routes>
+			<Route path="/" element={<Dashboard />} />
+			<Route path="*" element={<NotFound />} />
+		</Routes>
 	);
 }
 

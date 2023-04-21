@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const NavStyle = styled.nav`
@@ -8,7 +9,7 @@ const NavStyle = styled.nav`
 		left: 0;
 		bottom: 0;
 		width: 250px;
-		background-color: #3b5998;
+		background-color: #b19cd8;
 		overflow-y: auto;
 	}
 
@@ -63,29 +64,29 @@ const Navbar = () => {
 				<nav className="navbar">
 					<ul className="navbar__links">
 						<li className="navbar__item">
-							<a href="#" className="navbar__link">
+							<Link to="/" className="navbar__link">
 								Home
-							</a>
+							</Link>
 						</li>
 						<li className="navbar__item">
-							<a href="#" className="navbar__link">
+							<Link to="/users" className="navbar__link">
 								Users
-							</a>
+							</Link>
 						</li>
 						<li className="navbar__item">
-							<a href="#" className="navbar__link">
+							<Link to="/branches" className="navbar__link">
 								Branches
-							</a>
+							</Link>
 						</li>
 						<li className="navbar__item">
-							<a href="#" className="navbar__link">
+							<Link to="/items" className="navbar__link">
 								Items
-							</a>
+							</Link>
 						</li>
 						<li className="navbar__item">
-							<a href="#" className="navbar__link">
+							<Link to="/deliveries" className="navbar__link">
 								Deliveries
-							</a>
+							</Link>
 						</li>
 					</ul>
 				</nav>
