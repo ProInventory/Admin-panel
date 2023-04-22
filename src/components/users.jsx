@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import moment from "moment";
 
 import Navbar from "./common/navBar";
-
+import Popup from "./common/popup";
 import fetchData from "./utils/fetchData";
 
 const UsersStyle = styled.div`
@@ -28,76 +28,54 @@ const UsersStyle = styled.div`
 	}
 `;
 
-const PopupStyle = styled.div`
-	.popup {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background-color: rgba(0, 0, 0, 0.5);
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
-	.popup-content {
-		position: relative;
-		background-color: #fff;
-		padding: 20px;
-		border-radius: 5px;
-		width: 400px;
-		max-width: 90%;
-	}
-
-	.popup-content h2 {
-		margin-top: 0;
-	}
-
-	.popup-content form {
-		margin-top: 20px;
-	}
-
-	.popup-content .form-group {
-		margin-bottom: 10px;
-	}
-
-	.popup-content label {
-		display: block;
-		margin-bottom: 5px;
-	}
-
-	.popup-content input[type="text"],
-	.popup-content input[type="email"],
-	.popup-content input[type="password"],
-	.popup-content input[type="checkbox"] {
-		width: 100%;
-		padding: 8px;
-		border-radius: 3px;
-		border: 1px solid #ccc;
-		font-size: 16px;
-	}
-
-	.popup-content button[type="submit"],
-	.popup-content button[type="button"] {
-		margin-top: 10px;
-	}
-`;
-
 const Users = () => {
 	const [users, setUsers] = useState([]);
-	const [showPopup, setShowPopup] = useState(false);
+	const [showAddNewPopup, setAddNewShowPopup] = useState(false);
+	const [error, setError] = useState("");
+	const [showErrorPopup, setErrorShowPopup] = useState(false);
 
 	useEffect(() => {
-		fetchData("users").then((data) => setUsers(data));
+		fetchData("users").then((response) => setUsers(response.data));
 	}, []);
 
-	const openPopup = () => {
-		setShowPopup(true);
+	const openAddNewPopup = () => {
+		setAddNewShowPopup(true);
 	};
 
-	const closePopup = () => {
-		setShowPopup(false);
+	const closeAddNewPopup = () => {
+		setAddNewShowPopup(false);
+	};
+
+	const openErrorPopup = () => {
+		setErrorShowPopup(true);
+	};
+
+	const closeErrorPopup = () => {
+		setErrorShowPopup(false);
+	};
+
+	const handleSubmit = (event) => {
+		event.preventDefault();
+		const username = event.target.elements.username.value;
+		const email = event.target.elements.email.value;
+		const password = event.target.elements.password.value;
+		const isAdmin = event.target.elements.isAdmin.checked;
+
+		const newUser = {
+			username,
+			email,
+			password,
+		};
+
+		fetchData("users", "POST", newUser).then((response) => {
+			if (response.status === 400) {
+				openErrorPopup();
+				setError(response.data);
+			} else {
+				setUsers([...users, response.data]);
+				closeAddNewPopup();
+			}
+		});
 	};
 
 	return (
@@ -108,7 +86,7 @@ const Users = () => {
 					<div className="users_content">
 						<button
 							className="btn btn-primary mb-3"
-							onClick={openPopup}
+							onClick={openAddNewPopup}
 						>
 							Create User
 						</button>
@@ -151,66 +129,78 @@ const Users = () => {
 					</div>
 				</div>
 			</UsersStyle>
-			<PopupStyle>
-				{showPopup && (
-					<div className="popup">
-						<div className="popup-content">
-							<h2>Create User</h2>
-							<form>
-								<div className="form-group">
-									<label htmlFor="username">Username:</label>
-									<input
-										type="text"
-										id="username"
-										name="username"
-										className="form-control"
-									/>
-								</div>
-								<div className="form-group">
-									<label htmlFor="email">Email:</label>
-									<input
-										type="email"
-										id="email"
-										name="email"
-										className="form-control"
-									/>
-								</div>
-								<div className="form-group">
-									<label htmlFor="password">Password:</label>
-									<input
-										type="password"
-										id="password"
-										name="password"
-										className="form-control"
-									/>
-								</div>
-								<div className="form-group">
-									<label htmlFor="isAdmin">isAdmin:</label>
-									<input
-										type="checkbox"
-										id="isAdmin"
-										name="isAdmin"
-										className="form-check-input"
-									/>
-								</div>
-								<button
-									type="submit"
-									className="btn btn-primary"
-								>
-									Submit
-								</button>
-								<button
-									type="button"
-									className="btn btn-secondary ml-3"
-									onClick={closePopup}
-								>
-									Cancel
-								</button>
-							</form>
-						</div>
-					</div>
-				)}
-			</PopupStyle>
+			{showAddNewPopup && (
+				<Popup
+					title="Create User"
+					body={
+						<form onSubmit={handleSubmit}>
+							<div className="form-group">
+								<label htmlFor="username">Username:</label>
+								<input
+									type="text"
+									id="username"
+									name="username"
+									className="form-control"
+								/>
+							</div>
+							<div className="form-group">
+								<label htmlFor="email">Email:</label>
+								<input
+									type="email"
+									id="email"
+									name="email"
+									className="form-control"
+								/>
+							</div>
+							<div className="form-group">
+								<label htmlFor="password">Password:</label>
+								<input
+									type="password"
+									id="password"
+									name="password"
+									className="form-control"
+								/>
+							</div>
+							<div className="form-group">
+								<label htmlFor="isAdmin">isAdmin:</label>
+								<input
+									type="checkbox"
+									id="isAdmin"
+									name="isAdmin"
+									className="form-check-input"
+								/>
+							</div>
+							<button type="submit" className="btn btn-primary">
+								Submit
+							</button>
+							<button
+								type="button"
+								className="btn btn-secondary ml-3"
+								onClick={closeAddNewPopup}
+							>
+								Cancel
+							</button>
+						</form>
+					}
+				/>
+			)}
+			{showErrorPopup && (
+				<Popup
+					title="Error"
+					body={
+						<React.Fragment>
+							<p>{error}</p>
+							<button
+								type="button"
+								className="btn btn-secondary ml-3"
+								onClick={closeErrorPopup}
+							>
+								Cancel
+							</button>
+						</React.Fragment>
+					}
+				/>
+			)}
 		</React.Fragment>
 	);
 };

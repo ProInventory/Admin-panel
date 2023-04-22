@@ -2,25 +2,25 @@ import axios from "axios";
 
 import Config from "../../config.json";
 
-async function fetchData(url, method = "get") {
+async function fetchData(url, method = "GET", data = null) {
 	url = Config.api + url;
+	let response = null;
 
 	try {
-		if (method === "get") {
-			const response = await axios.get(url);
-			return response.data;
-		} else if (method === "post") {
-			const response = await axios.post(url);
-			return response.data;
-		} else if (method === "put") {
-			const response = await axios.put(url);
-			return response.data;
-		} else if (method === "delete") {
-			const response = await axios.delete(url);
-			return response.data;
+		if (method === "GET") {
+			response = await axios.get(url);
+		} else if (method === "POST") {
+			response = await axios.post(url, data);
+		} else if (method === "PUT") {
+			response = await axios.put(url);
+		} else if (method === "DELETE") {
+			response = await axios.delete(url);
 		}
+
+		return response;
 	} catch (error) {
 		console.log(error);
+		return error.response;
 	}
 }
 

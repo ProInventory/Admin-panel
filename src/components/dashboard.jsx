@@ -38,8 +38,8 @@ const Dashboard = () => {
 	const [branches, setBranches] = useState([]);
 
 	useEffect(() => {
-		fetchData("users").then((data) => setUsers(data));
-		fetchData("branches").then((data) => setBranches(data));
+		fetchData("users").then((response) => setUsers(response.data));
+		fetchData("branches").then((response) => setBranches(response.data));
 	}, []);
 
 	return (
