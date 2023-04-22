@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const BoxStyle = styled.div`
@@ -11,15 +12,18 @@ const BoxStyle = styled.div`
 `;
 
 const Box = (props) => {
-	const { title, body } = props;
+	const { cardStyle, title, body, link } = props;
 
 	return (
-		<BoxStyle>
-			<div className="box">
-				<h2>{title}</h2>
-				<p>{body}</p>
+		<div className={`card ${cardStyle}`}>
+			<div className="card-body">
+				<h5 className="card-title">{title}</h5>
+				<p className="card-text">{body}</p>
+				<Link to={link} className="card-link">
+					Go to {title}
+				</Link>
 			</div>
-		</BoxStyle>
+		</div>
 	);
 };
 

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import styled from "styled-components";
 
 import Navbar from "./common/navBar";
 import Box from "./dashboard/box";
+
+import fetchData from "./utils/fetchData";
 
 const DashStyle = styled.div`
 	.dashboard {
@@ -32,26 +33,13 @@ const DashStyle = styled.div`
 	}
 `;
 
-async function fetchData(url) {
-	try {
-		const response = await axios.get(url);
-		return response.data;
-	} catch (error) {
-		console.log(error);
-	}
-}
-
 const Dashboard = () => {
 	const [users, setUsers] = useState([]);
 	const [branches, setBranches] = useState([]);
 
 	useEffect(() => {
-		fetchData("http://localhost:3000/api/users").then((data) =>
-			setUsers(data)
-		);
-		fetchData("http://localhost:3000/api/branches").then((data) =>
-			setBranches(data)
-		);
+		fetchData("users").then((data) => setUsers(data));
+		fetchData("branches").then((data) => setBranches(data));
 	}, []);
 
 	return (
@@ -70,13 +58,22 @@ const Dashboard = () => {
 									<td>
 										<Box
 											title="Users"
-											body={users.length}
+											body={
+												<React.Fragment>
+													Total : {users.length}
+												</React.Fragment>
+											}
+											link="/users"
 										/>
 									</td>
 									<td>
 										<Box
 											title="Branches"
-											body={branches.length}
+											body={
+												<React.Fragment>
+													Total : {branches.length}
+												</React.Fragment>
+											}
 										/>
 									</td>
 								</tr>
