@@ -12,7 +12,6 @@ const BoxStyle = styled.div`
 
 const Box = (props) => {
 	const { title, body } = props;
-	console.log(props);
 
 	return (
 		<BoxStyle>

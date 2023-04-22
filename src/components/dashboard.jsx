@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import styled from "styled-components";
 
 import Navbar from "./common/navBar";
@@ -31,7 +32,28 @@ const DashStyle = styled.div`
 	}
 `;
 
+async function fetchData(url) {
+	try {
+		const response = await axios.get(url);
+		return response.data;
+	} catch (error) {
+		console.log(error);
+	}
+}
+
 const Dashboard = () => {
+	const [users, setUsers] = useState([]);
+	const [branches, setBranches] = useState([]);
+
+	useEffect(() => {
+		fetchData("http://localhost:3000/api/users").then((data) =>
+			setUsers(data)
+		);
+		fetchData("http://localhost:3000/api/branches").then((data) =>
+			setBranches(data)
+		);
+	}, []);
+
 	return (
 		<React.Fragment>
 			<DashStyle>
@@ -46,10 +68,16 @@ const Dashboard = () => {
 							<tbody>
 								<tr>
 									<td>
-										<Box title="Users" body="Lorem" />
+										<Box
+											title="Users"
+											body={users.length}
+										/>
 									</td>
 									<td>
-										<Box title="Branches" body="Lorem" />
+										<Box
+											title="Branches"
+											body={branches.length}
+										/>
 									</td>
 								</tr>
 								<tr>
