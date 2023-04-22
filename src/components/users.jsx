@@ -33,11 +33,17 @@ const UsersStyle = styled.div`
 `;
 
 const Users = () => {
+	const [username, setUsername] = useState("");
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [isAdmin, setIsAdmin] = useState(false);
+
 	const [users, setUsers] = useState([]);
 	const [selectedUser, setSelectedUser] = useState("");
 	const [error, setError] = useState("");
 
 	const [showAddNewPopup, setAddNewShowPopup] = useState(false);
+	const [showEditPopup, setEditShowPopup] = useState(false);
 	const [showDeletePopup, setDeleteShowPopup] = useState(false);
 
 	const [showSuccessPopup, setSuccessShowPopup] = useState(false);
@@ -49,6 +55,14 @@ const Users = () => {
 
 	const changeSelectedUser = (_id) => {
 		setSelectedUser(_id);
+
+		const user = users.find((user) => user._id === _id);
+		if (!user) return;
+
+		setUsername(user.username);
+		setEmail(user.email);
+		setPassword(user.password);
+		if (user.isAdmin) setIsAdmin(user.isAdmin);
 	};
 
 	const openAddNewPopup = () => {
@@ -57,6 +71,16 @@ const Users = () => {
 
 	const closeAddNewPopup = () => {
 		setAddNewShowPopup(false);
+	};
+
+	const openEditPopup = (_id) => {
+		changeSelectedUser(_id);
+		setEditShowPopup(true);
+	};
+
+	const closeEditPopup = () => {
+		changeSelectedUser("");
+		setEditShowPopup(false);
 	};
 
 	const openDeletePopup = (_id) => {
@@ -86,7 +110,7 @@ const Users = () => {
 		setErrorShowPopup(false);
 	};
 
-	const handleSubmit = (event) => {
+	const handleSubmitNewUser = (event) => {
 		event.preventDefault();
 		const username = event.target.elements.username.value;
 		const email = event.target.elements.email.value;
@@ -111,6 +135,44 @@ const Users = () => {
 		});
 	};
 
+	const handleSubmitEditUser = (event) => {
+		event.preventDefault();
+		const username = event.target.elements.username.value;
+		const email = event.target.elements.email.value;
+		const password = event.target.elements.password.value;
+		const isAdmin = event.target.elements.isAdmin.checked;
+
+		const editedUser = {
+			username,
+			email,
+			password,
+		};
+
+		if (editedUser.password === "") {
+			delete editedUser.password;
+		}
+
+		fetchData(`users/${selectedUser}`, "PUT", editedUser).then(
+			(response) => {
+				if (response.status === 400) {
+					setError(response.data);
+					openErrorPopup();
+				} else {
+					const newUsers = users.map((user) => {
+						if (user._id === selectedUser) {
+							return response.data;
+						} else {
+							return user;
+						}
+					});
+					setUsers(newUsers);
+					closeEditPopup();
+					openSuccessPopup();
+				}
+			}
+		);
+	};
+
 	const handleDelete = () => {
 		fetchData(`users/${selectedUser}`, "DELETE").then((response) => {
 			if (response.status === 400) {
@@ -122,6 +184,20 @@ const Users = () => {
 				openSuccessPopup();
 			}
 		});
+	};
+
+	const onTodoChange = (what, value) => {
+		if (what === "username") {
+			setUsername(value);
+		} else if (what === "email") {
+			setEmail(value);
+		} else if (what === "password") {
+			setPassword(value);
+		} else if (what === "isAdmin") {
+			setIsAdmin(!value);
+		}
+
+		console.log(isAdmin);
 	};
 
 	return (
@@ -161,7 +237,12 @@ const Users = () => {
 											).format("DD MM YYYY, h:mm:ss a")}
 										</td>
 										<td>
-											<button className="btn btn-primary buttons">
+											<button
+												className="btn btn-primary buttons"
+												onClick={() =>
+													openEditPopup(user._id)
+												}
+											>
 												Edit
 											</button>
 											<button
@@ -184,7 +265,7 @@ const Users = () => {
 				<Popup
 					title="Create User"
 					body={
-						<form onSubmit={handleSubmit}>
+						<form onSubmit={handleSubmitNewUser}>
 							<div className="form-group">
 								<label htmlFor="username">Username:</label>
 								<input
@@ -229,6 +310,80 @@ const Users = () => {
 								type="button"
 								className="btn btn-secondary ml-3"
 								onClick={closeAddNewPopup}
+							>
+								Cancel
+							</button>
+						</form>
+					}
+				/>
+			)}
+			{showEditPopup && (
+				<Popup
+					title="Edit User"
+					body={
+						<form onSubmit={handleSubmitEditUser}>
+							<div className="form-group">
+								<label htmlFor="username">Username:</label>
+								<input
+									type="text"
+									id="username"
+									name="username"
+									className="form-control"
+									value={username}
+									onChange={(e) =>
+										onTodoChange("username", e.target.value)
+									}
+								/>
+							</div>
+							<div className="form-group">
+								<label htmlFor="email">Email:</label>
+								<input
+									type="email"
+									id="email"
+									name="email"
+									className="form-control"
+									value={email}
+									onChange={(e) =>
+										onTodoChange("email", e.target.value)
+									}
+								/>
+							</div>
+							<div className="form-group">
+								<label htmlFor="isAdmin">isAdmin:</label>
+								<input
+									type="checkbox"
+									id="isAdmin"
+									name="isAdmin"
+									className="form-check-input"
+									value={isAdmin}
+									onChange={(e) =>
+										onTodoChange(
+											"isAdmin",
+											e.target.checked // this need to be fixed
+										)
+									}
+								/>
+							</div>
+							<div className="form-group">
+								<label htmlFor="password">Password:</label>
+								<input
+									type="password"
+									id="password"
+									name="password"
+									className="form-control"
+								/>
+								Leave the password empty if you don't want to
+								change it
+							</div>
+
+							<button type="submit" className="btn btn-primary">
+								Submit
+							</button>
+							<button
+								style={{ marginLeft: "10px" }}
+								type="button"
+								className="btn btn-secondary ml-3"
+								onClick={closeEditPopup}
 							>
 								Cancel
 							</button>

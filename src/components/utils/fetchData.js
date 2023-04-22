@@ -12,7 +12,7 @@ async function fetchData(url, method = "GET", data = null) {
 		} else if (method === "POST") {
 			response = await axios.post(url, data);
 		} else if (method === "PUT") {
-			response = await axios.put(url);
+			response = await axios.put(url, data);
 		} else if (method === "DELETE") {
 			response = await axios.delete(url);
 		}
