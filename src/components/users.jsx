@@ -17,6 +17,10 @@ const UsersStyle = styled.div`
 		padding: 20px;
 	}
 
+	.buttons {
+		margin: 0 5px;
+	}
+
 	@media only screen and (max-width: 768px) {
 		.users {
 			flex-direction: column;
@@ -30,13 +34,22 @@ const UsersStyle = styled.div`
 
 const Users = () => {
 	const [users, setUsers] = useState([]);
-	const [showAddNewPopup, setAddNewShowPopup] = useState(false);
+	const [selectedUser, setSelectedUser] = useState("");
 	const [error, setError] = useState("");
+
+	const [showAddNewPopup, setAddNewShowPopup] = useState(false);
+	const [showDeletePopup, setDeleteShowPopup] = useState(false);
+
+	const [showSuccessPopup, setSuccessShowPopup] = useState(false);
 	const [showErrorPopup, setErrorShowPopup] = useState(false);
 
 	useEffect(() => {
 		fetchData("users").then((response) => setUsers(response.data));
 	}, []);
+
+	const changeSelectedUser = (_id) => {
+		setSelectedUser(_id);
+	};
 
 	const openAddNewPopup = () => {
 		setAddNewShowPopup(true);
@@ -44,6 +57,25 @@ const Users = () => {
 
 	const closeAddNewPopup = () => {
 		setAddNewShowPopup(false);
+	};
+
+	const openDeletePopup = (_id) => {
+		changeSelectedUser(_id);
+		setDeleteShowPopup(true);
+	};
+
+	const closeDeletePopup = () => {
+		changeSelectedUser("");
+		setDeleteShowPopup(false);
+	};
+
+	const openSuccessPopup = () => {
+		setSuccessShowPopup(true);
+	};
+
+	const closeSuccessPopup = () => {
+		setSuccessShowPopup(false);
+		window.location.reload(false);
 	};
 
 	const openErrorPopup = () => {
@@ -69,11 +101,25 @@ const Users = () => {
 
 		fetchData("users", "POST", newUser).then((response) => {
 			if (response.status === 400) {
-				openErrorPopup();
 				setError(response.data);
+				openErrorPopup();
 			} else {
 				setUsers([...users, response.data]);
 				closeAddNewPopup();
+				openSuccessPopup();
+			}
+		});
+	};
+
+	const handleDelete = () => {
+		fetchData(`users/${selectedUser}`, "DELETE").then((response) => {
+			if (response.status === 400) {
+				setError(response.data);
+				openErrorPopup();
+			} else {
+				setUsers(users.filter((user) => user._id !== selectedUser));
+				closeDeletePopup();
+				openSuccessPopup();
 			}
 		});
 	};
@@ -103,7 +149,7 @@ const Users = () => {
 							</thead>
 							<tbody>
 								{users.map((user) => (
-									<tr key={user.username}>
+									<tr key={user._id}>
 										<td>{user.username}</td>
 										<td>{user.email}</td>
 										<td>{user.isAdmin ? "Yes" : "No"}</td>
@@ -115,10 +161,15 @@ const Users = () => {
 											).format("DD MM YYYY, h:mm:ss a")}
 										</td>
 										<td>
-											<button className="btn btn-primary">
+											<button className="btn btn-primary buttons">
 												Edit
 											</button>
-											<button className="btn btn-danger">
+											<button
+												className="btn btn-danger buttons"
+												onClick={() =>
+													openDeletePopup(user._id)
+												}
+											>
 												Delete
 											</button>
 										</td>
@@ -174,6 +225,7 @@ const Users = () => {
 								Submit
 							</button>
 							<button
+								style={{ marginLeft: "10px" }}
 								type="button"
 								className="btn btn-secondary ml-3"
 								onClick={closeAddNewPopup}
@@ -181,6 +233,47 @@ const Users = () => {
 								Cancel
 							</button>
 						</form>
+					}
+				/>
+			)}
+			{showDeletePopup && (
+				<Popup
+					title="Delete User"
+					body={
+						<React.Fragment>
+							<p>Are you sure you want to delete this user?</p>
+							<button
+								type="button"
+								className="btn btn-primary"
+								onClick={handleDelete}
+							>
+								Yes
+							</button>
+							<button
+								type="button"
+								className="btn btn-secondary ml-3"
+								onClick={closeDeletePopup}
+							>
+								No
+							</button>
+						</React.Fragment>
+					}
+				/>
+			)}
+			{showSuccessPopup && (
+				<Popup
+					title="Success"
+					body={
+						<React.Fragment>
+							<p>Operation complete</p>
+							<button
+								type="button"
+								className="btn btn-secondary ml-3"
+								onClick={closeSuccessPopup}
+							>
+								Ok
+							</button>
+						</React.Fragment>
 					}
 				/>
 			)}
