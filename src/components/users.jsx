@@ -38,10 +38,6 @@ const UsersStyle = styled.div`
 `;
 
 const Users = () => {
-	useEffect(() => {
-		fetchData("users").then((response) => setUsers(response.data));
-	}, []);
-
 	const [id, setId] = useState("");
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
@@ -58,6 +54,11 @@ const Users = () => {
 
 	const [showSuccessPopup, setSuccessShowPopup] = useState(false);
 	const [showErrorPopup, setErrorShowPopup] = useState(false);
+
+	useEffect(() => {
+		fetchData("users").then((response) => setUsers(response.data));
+		console.log("Worked!");
+	}, []);
 
 	const openAddNewPopup = () => {
 		setAddNewShowPopup(true);
@@ -93,7 +94,6 @@ const Users = () => {
 
 	const closeSuccessPopup = () => {
 		setSuccessShowPopup(false);
-		window.location.reload(false);
 	};
 
 	const openErrorPopup = () => {
@@ -140,13 +140,14 @@ const Users = () => {
 		};
 
 		fetchData("users", "POST", newUser).then((response) => {
-			if (response.status === 400) {
+			if (response.status === 200) {
+				openSuccessPopup();
+				closeAddNewPopup();
+				setUsers([...users, response.data]);
+			} else {
+				setErrorShowPopup(true);
 				setError(response.data);
 				openErrorPopup();
-			} else {
-				setUsers([...users, response.data]);
-				closeAddNewPopup();
-				openSuccessPopup();
 			}
 		});
 	};
@@ -171,10 +172,9 @@ const Users = () => {
 
 		fetchData(`users/${selectedUser}`, "PUT", editedUser).then(
 			(response) => {
-				if (response.status === 400) {
-					setError(response.data);
-					openErrorPopup();
-				} else {
+				if (response.status === 200) {
+					closeEditPopup();
+					openSuccessPopup();
 					const newUsers = users.map((user) => {
 						if (user._id === selectedUser) {
 							return response.data;
@@ -182,9 +182,11 @@ const Users = () => {
 							return user;
 						}
 					});
+
 					setUsers(newUsers);
-					closeEditPopup();
-					openSuccessPopup();
+				} else {
+					setError(response.data);
+					openErrorPopup();
 				}
 			}
 		);

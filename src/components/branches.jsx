@@ -36,10 +36,6 @@ const BranchesStyle = styled.div`
 `;
 
 const Branches = () => {
-	useEffect(() => {
-		fetchData("branches").then((response) => setBranches(response.data));
-	}, []);
-
 	const [id, setId] = useState("");
 	const [name, setName] = useState("");
 	const [address, setAddress] = useState("");
@@ -57,6 +53,10 @@ const Branches = () => {
 
 	const [showSuccessPopup, setSuccessShowPopup] = useState(false);
 	const [showErrorPopup, setErrorShowPopup] = useState(false);
+
+	useEffect(() => {
+		fetchData("branches").then((response) => setBranches(response.data));
+	}, []);
 
 	const openAddNewPopup = () => {
 		setAddNewShowPopup(true);
@@ -93,7 +93,6 @@ const Branches = () => {
 
 	const closeSuccessPopup = () => {
 		setSuccessShowPopup(false);
-		window.location.reload(false);
 	};
 
 	const openErrorPopup = () => {
@@ -146,7 +145,7 @@ const Branches = () => {
 		fetchData("branches", "POST", newBranch).then((response) => {
 			if (response.status === 200) {
 				openSuccessPopup();
-				setBranches([...branches, newBranch]);
+				setBranches([...branches, response.data]);
 			} else {
 				setErrorShowPopup(true);
 				setError(response.data);
@@ -182,7 +181,7 @@ const Branches = () => {
 						return branch;
 					}
 				});
-				setAddress(newBranches);
+				setBranches(newBranches);
 			} else {
 				setError(response.data);
 				openErrorPopup();
