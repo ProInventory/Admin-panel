@@ -21,17 +21,17 @@ const NavStyle = styled.nav`
 		align-items: center;
 	}
 
-	.navbar__links {
+	.navbar_links {
 		list-style: none;
 		margin: 0;
 		padding: 30px;
 	}
 
-	.navbar__item {
+	.navbar_item {
 		margin-bottom: 10px;
 	}
 
-	.navbar__link {
+	.navbar_link {
 		display: block;
 		color: white;
 		font-size: 20px;
@@ -48,18 +48,18 @@ const NavStyle = styled.nav`
 			align-items: center;
 		}
 
-		.navbar__links {
+		.navbar_links {
 			display: flex;
 			margin: 0;
 			padding: 0;
 		}
 
-		.navbar__item {
+		.navbar_item {
 			margin-left: 10px;
 			margin-right: 10px;
 		}
 
-		.navbar__link {
+		.navbar_link {
 			font-size: 16px;
 		}
 	}
@@ -73,29 +73,29 @@ const Navbar = () => {
 					<div className="logo">
 						<Logo />
 					</div>
-					<ul className="navbar__links">
-						<li className="navbar__item">
-							<Link to="/" className="navbar__link">
+					<ul className="navbar_links">
+						<li className="navbar_item">
+							<Link to="/" className="navbar_link">
 								Home
 							</Link>
 						</li>
-						<li className="navbar__item">
-							<Link to="/users" className="navbar__link">
+						<li className="navbar_item">
+							<Link to="/users" className="navbar_link">
 								Users
 							</Link>
 						</li>
-						<li className="navbar__item">
-							<Link to="/branches" className="navbar__link">
+						<li className="navbar_item">
+							<Link to="/branches" className="navbar_link">
 								Branches
 							</Link>
 						</li>
-						<li className="navbar__item">
-							<Link to="/items" className="navbar__link">
-								Items
+						<li className="navbar_item">
+							<Link to="/products" className="navbar_link">
+								Products
 							</Link>
 						</li>
-						<li className="navbar__item">
-							<Link to="/deliveries" className="navbar__link">
+						<li className="navbar_item">
+							<Link to="/deliveries" className="navbar_link">
 								Deliveries
 							</Link>
 						</li>

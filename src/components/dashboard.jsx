@@ -11,7 +11,7 @@ const DashStyle = styled.div`
 		display: flex;
 	}
 
-	.dashboard__content {
+	.dashboard_content {
 		margin-left: 250px;
 		padding: 20px;
 	}
@@ -27,7 +27,7 @@ const DashStyle = styled.div`
 			flex-direction: column;
 		}
 
-		.dashboard__content {
+		.dashboard_content {
 			margin-left: 0;
 		}
 	}
@@ -36,10 +36,12 @@ const DashStyle = styled.div`
 const Dashboard = () => {
 	const [users, setUsers] = useState([]);
 	const [branches, setBranches] = useState([]);
+	const [products, setProducts] = useState([]);
 
 	useEffect(() => {
 		fetchData("users").then((response) => setUsers(response.data));
 		fetchData("branches").then((response) => setBranches(response.data));
+		fetchData("products").then((response) => setProducts(response.data));
 	}, []);
 
 	return (
@@ -47,7 +49,7 @@ const Dashboard = () => {
 			<DashStyle>
 				<div className="dashboard">
 					<Navbar />
-					<div className="dashboard__content">
+					<div className="dashboard_content">
 						<h1>Welcome to your Dashboard</h1>
 						<p>
 							Here you can see your latest updates and messages.
@@ -74,12 +76,21 @@ const Dashboard = () => {
 													Total : {branches.length}
 												</React.Fragment>
 											}
+											link="/branches"
 										/>
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<Box title="Items" body="Lorem" />
+										<Box
+											title="Products"
+											body={
+												<React.Fragment>
+													Total : {products.length}
+												</React.Fragment>
+											}
+											link="/products"
+										/>
 									</td>
 									<td>
 										<Box title="Deliveries" body="Lorem" />
