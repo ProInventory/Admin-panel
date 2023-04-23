@@ -3,7 +3,7 @@ import React from "react";
 import Popup from "../common/popup";
 
 const SuccessPopup = (props) => {
-	const { onCloseSuccessPopup } = props;
+	const { onClose } = props;
 
 	return (
 		<React.Fragment>
@@ -15,7 +15,7 @@ const SuccessPopup = (props) => {
 						<button
 							type="button"
 							className="btn btn-secondary ml-3"
-							onClick={onCloseSuccessPopup}
+							onClick={onClose}
 						>
 							Ok
 						</button>

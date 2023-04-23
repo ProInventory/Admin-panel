@@ -3,7 +3,7 @@ import React from "react";
 import Popup from "../common/popup";
 
 const EditPopup = (props) => {
-	const { onCloseEditPopup, onTodoChange, onSubmitEditUser } = props;
+	const { onClose, onChange, onSubmit } = props;
 	const { id, username, email, isAdmin } = props.user;
 
 	return (
@@ -13,7 +13,7 @@ const EditPopup = (props) => {
 				body={
 					<React.Fragment>
 						User id: {id}
-						<form onSubmit={onSubmitEditUser}>
+						<form onSubmit={onSubmit}>
 							<div className="form-group">
 								<label htmlFor="username">Username:</label>
 								<input
@@ -23,7 +23,7 @@ const EditPopup = (props) => {
 									className="form-control"
 									value={username}
 									onChange={(e) =>
-										onTodoChange("username", e.target.value)
+										onChange("username", e.target.value)
 									}
 								/>
 							</div>
@@ -37,7 +37,7 @@ const EditPopup = (props) => {
 									className="form-control"
 									value={email}
 									onChange={(e) =>
-										onTodoChange("email", e.target.value)
+										onChange("email", e.target.value)
 									}
 								/>
 							</div>
@@ -52,7 +52,7 @@ const EditPopup = (props) => {
 									style={{ width: "20px", height: "20px" }}
 									checked={isAdmin}
 									onChange={(e) =>
-										onTodoChange(
+										onChange(
 											"isAdmin",
 											e.target.checked // this need to be fixed
 										)
@@ -80,7 +80,7 @@ const EditPopup = (props) => {
 								style={{ marginLeft: "10px" }}
 								type="button"
 								className="btn btn-secondary ml-3"
-								onClick={onCloseEditPopup}
+								onClick={onClose}
 							>
 								Cancel
 							</button>

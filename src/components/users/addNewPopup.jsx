@@ -3,7 +3,7 @@ import React from "react";
 import Popup from "../common/popup";
 
 const AddNewPopup = (props) => {
-	const { onCloseAddNewPopup, onSubmit } = props;
+	const { onClose, onSubmit } = props;
 
 	return (
 		<React.Fragment>
@@ -60,7 +60,7 @@ const AddNewPopup = (props) => {
 							style={{ marginLeft: "10px" }}
 							type="button"
 							className="btn btn-secondary ml-3"
-							onClick={onCloseAddNewPopup}
+							onClick={onClose}
 						>
 							Cancel
 						</button>

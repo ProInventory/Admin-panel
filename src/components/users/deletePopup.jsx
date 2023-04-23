@@ -3,7 +3,7 @@ import React from "react";
 import Popup from "../common/popup";
 
 const DeletePopup = (props) => {
-	const { onCloseDeletePopup, onDeleteUser } = props;
+	const { id, onClose, onDelete } = props;
 
 	return (
 		<React.Fragment>
@@ -12,11 +12,11 @@ const DeletePopup = (props) => {
 				body={
 					<React.Fragment>
 						<p>Are you sure you want to delete this user?</p>
-
+						<p>User id: {id}</p>
 						<button
 							type="button"
 							className="btn btn-primary"
-							onClick={onDeleteUser}
+							onClick={onDelete}
 						>
 							Yes
 						</button>
@@ -25,7 +25,7 @@ const DeletePopup = (props) => {
 							type="button"
 							className="btn btn-secondary ml-3"
 							style={{ marginLeft: "10px" }}
-							onClick={onCloseDeletePopup}
+							onClick={onClose}
 						>
 							No
 						</button>

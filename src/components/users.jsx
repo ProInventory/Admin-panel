@@ -55,10 +55,6 @@ const Users = () => {
 	const [showSuccessPopup, setSuccessShowPopup] = useState(false);
 	const [showErrorPopup, setErrorShowPopup] = useState(false);
 
-	useEffect(() => {
-		fetchData("users").then((response) => setUsers(response.data));
-	}, []);
-
 	const changeSelectedUser = (_id) => {
 		setSelectedUser(_id);
 
@@ -125,7 +121,7 @@ const Users = () => {
 		setErrorShowPopup(false);
 	};
 
-	const handleSubmitNewUser = (event) => {
+	const handleAddUser = (event) => {
 		event.preventDefault();
 		const username = event.target.elements.username.value;
 		const email = event.target.elements.email.value;
@@ -151,7 +147,7 @@ const Users = () => {
 		});
 	};
 
-	const handleSubmitEditUser = (event) => {
+	const handleEdit = (event) => {
 		event.preventDefault();
 		const username = event.target.elements.username.value;
 		const email = event.target.elements.email.value;
@@ -203,7 +199,7 @@ const Users = () => {
 		});
 	};
 
-	const onTodoChange = (what, value) => {
+	const handleChange = (what, value) => {
 		if (what === "username") {
 			setUsername(value);
 		} else if (what === "email") {
@@ -214,6 +210,10 @@ const Users = () => {
 			setIsAdmin(value);
 		}
 	};
+
+	useEffect(() => {
+		fetchData("users").then((response) => setUsers(response.data));
+	}, []);
 
 	return (
 		<React.Fragment>
@@ -279,33 +279,32 @@ const Users = () => {
 
 			{showAddNewPopup && (
 				<AddNewPopup
-					onSubmit={handleSubmitNewUser}
-					onCloseAddNewPopup={closeAddNewPopup}
+					onSubmit={handleAddUser}
+					onClose={closeAddNewPopup}
 				/>
 			)}
 
 			{showEditPopup && (
 				<EditPopup
-					onSubmitEditUser={handleSubmitEditUser}
-					onTodoChange={onTodoChange}
-					onCloseEditPopup={closeEditPopup}
+					onSubmit={handleEdit}
+					onChange={handleChange}
+					onClose={closeEditPopup}
 					user={{ id, username, email, isAdmin }}
 				/>
 			)}
 
 			{showDeletePopup && (
 				<DeletePopup
-					onDeleteUser={handleDelete}
-					onCloseDeletePopup={closeDeletePopup}
+					id={id}
+					onDelete={handleDelete}
+					onClose={closeDeletePopup}
 				/>
 			)}
 
-			{showSuccessPopup && (
-				<SuccessPopup onCloseSuccessPopup={closeSuccessPopup} />
-			)}
+			{showSuccessPopup && <SuccessPopup onClose={closeSuccessPopup} />}
 
 			{showErrorPopup && (
-				<ErrorPopup error={error} onCloseErrorPopup={closeErrorPopup} />
+				<ErrorPopup error={error} onClose={closeErrorPopup} />
 			)}
 		</React.Fragment>
 	);

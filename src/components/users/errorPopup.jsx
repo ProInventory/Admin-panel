@@ -3,7 +3,7 @@ import React from "react";
 import Popup from "../common/popup";
 
 const ErrorPopup = (props) => {
-	const { error, onCloseErrorPopup } = props;
+	const { error, onClose } = props;
 
 	return (
 		<React.Fragment>
@@ -15,7 +15,7 @@ const ErrorPopup = (props) => {
 						<button
 							type="button"
 							className="btn btn-secondary ml-3"
-							onClick={onCloseErrorPopup}
+							onClick={onClose}
 						>
 							Sure
 						</button>
