@@ -3,9 +3,14 @@ import styled from "styled-components";
 import mongoose from "mongoose";
 import moment from "moment";
 
-import Navbar from "./common/navBar";
-import Popup from "./common/popup";
 import fetchData from "./utils/fetchData";
+
+import Navbar from "./common/navBar";
+import AddNewPopup from "./users/addNewPopup";
+import EditPopup from "./users/editPopup";
+import DeletePopup from "./users/deletePopup";
+import SuccessPopup from "./users/successPopup";
+import ErrorPopup from "./users/errorPopup";
 
 const UsersStyle = styled.div`
 	.users {
@@ -33,6 +38,7 @@ const UsersStyle = styled.div`
 `;
 
 const Users = () => {
+	const [id, setId] = useState("");
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -57,8 +63,17 @@ const Users = () => {
 		setSelectedUser(_id);
 
 		const user = users.find((user) => user._id === _id);
-		if (!user) return;
+		if (!user) {
+			setError("User not found");
+			setId("");
+			setUsername("");
+			setEmail("");
+			setPassword("");
+			setIsAdmin(false);
+			return;
+		}
 
+		setId(user._id);
 		setUsername(user.username);
 		setEmail(user.email);
 		setPassword(user.password);
@@ -261,193 +276,36 @@ const Users = () => {
 					</div>
 				</div>
 			</UsersStyle>
-			{showAddNewPopup && (
-				<Popup
-					title="Create User"
-					body={
-						<form onSubmit={handleSubmitNewUser}>
-							<div className="form-group">
-								<label htmlFor="username">Username:</label>
-								<input
-									type="text"
-									id="username"
-									name="username"
-									className="form-control"
-								/>
-							</div>
-							<div className="form-group">
-								<label htmlFor="email">Email:</label>
-								<input
-									type="email"
-									id="email"
-									name="email"
-									className="form-control"
-								/>
-							</div>
-							<div className="form-group">
-								<label htmlFor="password">Password:</label>
-								<input
-									type="password"
-									id="password"
-									name="password"
-									className="form-control"
-								/>
-							</div>
-							<div className="form-group">
-								<label htmlFor="isAdmin">isAdmin:</label>
-								<input
-									type="checkbox"
-									id="isAdmin"
-									name="isAdmin"
-									className="form-check-input"
-								/>
-							</div>
-							<button type="submit" className="btn btn-primary">
-								Submit
-							</button>
-							<button
-								style={{ marginLeft: "10px" }}
-								type="button"
-								className="btn btn-secondary ml-3"
-								onClick={closeAddNewPopup}
-							>
-								Cancel
-							</button>
-						</form>
-					}
-				/>
-			)}
-			{showEditPopup && (
-				<Popup
-					title="Edit User"
-					body={
-						<form onSubmit={handleSubmitEditUser}>
-							<div className="form-group">
-								<label htmlFor="username">Username:</label>
-								<input
-									type="text"
-									id="username"
-									name="username"
-									className="form-control"
-									value={username}
-									onChange={(e) =>
-										onTodoChange("username", e.target.value)
-									}
-								/>
-							</div>
-							<div className="form-group">
-								<label htmlFor="email">Email:</label>
-								<input
-									type="email"
-									id="email"
-									name="email"
-									className="form-control"
-									value={email}
-									onChange={(e) =>
-										onTodoChange("email", e.target.value)
-									}
-								/>
-							</div>
-							<div className="form-group">
-								<label htmlFor="isAdmin">isAdmin:</label>
-								<input
-									type="checkbox"
-									id="isAdmin"
-									name="isAdmin"
-									className="form-check-input"
-									value={isAdmin}
-									onChange={(e) =>
-										onTodoChange(
-											"isAdmin",
-											e.target.checked // this need to be fixed
-										)
-									}
-								/>
-							</div>
-							<div className="form-group">
-								<label htmlFor="password">Password:</label>
-								<input
-									type="password"
-									id="password"
-									name="password"
-									className="form-control"
-								/>
-								Leave the password empty if you don't want to
-								change it
-							</div>
 
-							<button type="submit" className="btn btn-primary">
-								Submit
-							</button>
-							<button
-								style={{ marginLeft: "10px" }}
-								type="button"
-								className="btn btn-secondary ml-3"
-								onClick={closeEditPopup}
-							>
-								Cancel
-							</button>
-						</form>
-					}
+			{showAddNewPopup && (
+				<AddNewPopup
+					onCloseAddNewPopup={closeAddNewPopup}
+					onSubmit={handleSubmitNewUser}
 				/>
 			)}
+
+			{showEditPopup && (
+				<EditPopup
+					onCloseEditPopup={closeEditPopup}
+					onTodoChange={onTodoChange}
+					onSubmitEditUser={handleSubmitEditUser}
+					user={{ id, username, email, isAdmin }}
+				/>
+			)}
+
 			{showDeletePopup && (
-				<Popup
-					title="Delete User"
-					body={
-						<React.Fragment>
-							<p>Are you sure you want to delete this user?</p>
-							<button
-								type="button"
-								className="btn btn-primary"
-								onClick={handleDelete}
-							>
-								Yes
-							</button>
-							<button
-								type="button"
-								className="btn btn-secondary ml-3"
-								onClick={closeDeletePopup}
-							>
-								No
-							</button>
-						</React.Fragment>
-					}
+				<DeletePopup
+					onDeleteUser={handleDelete}
+					onCloseDeletePopup={closeDeletePopup}
 				/>
 			)}
+
 			{showSuccessPopup && (
-				<Popup
-					title="Success"
-					body={
-						<React.Fragment>
-							<p>Operation complete</p>
-							<button
-								type="button"
-								className="btn btn-secondary ml-3"
-								onClick={closeSuccessPopup}
-							>
-								Ok
-							</button>
-						</React.Fragment>
-					}
-				/>
+				<SuccessPopup onCloseSuccessPopup={closeSuccessPopup} />
 			)}
+
 			{showErrorPopup && (
-				<Popup
-					title="Error"
-					body={
-						<React.Fragment>
-							<p>{error}</p>
-							<button
-								type="button"
-								className="btn btn-secondary ml-3"
-								onClick={closeErrorPopup}
-							>
-								Cancel
-							</button>
-						</React.Fragment>
-					}
-				/>
+				<ErrorPopup error={error} onCloseErrorPopup={closeErrorPopup} />
 			)}
 		</React.Fragment>
 	);
