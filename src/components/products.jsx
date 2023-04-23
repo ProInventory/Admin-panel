@@ -95,10 +95,6 @@ const Products = () => {
 		setSuccessShowPopup(false);
 	};
 
-	const openErrorPopup = () => {
-		setErrorShowPopup(true);
-	};
-
 	const closeErrorPopup = () => {
 		setErrorShowPopup(false);
 	};
@@ -128,18 +124,16 @@ const Products = () => {
 
 	const handleAdd = (event) => {
 		event.preventDefault();
-		const name = event.target.elements.name.value;
-		const category = event.target.elements.category.value;
-		const price = event.target.elements.price.value;
-		const quantity = event.target.elements.quantity.value;
-		const description = event.target.elements.description.value;
+
+		const { name, category, price, quantity, description } =
+			event.target.elements;
 
 		const newProduct = {
-			name,
-			category,
-			price,
-			quantity,
-			description,
+			name: name.value,
+			category: category.value,
+			price: price.value,
+			quantity: quantity.value,
+			description: description.value,
 		};
 
 		fetchData("products", "POST", newProduct).then((response) => {
@@ -149,41 +143,41 @@ const Products = () => {
 				setProducts([...products, response.data]);
 			} else {
 				setError(response.data);
-				openErrorPopup();
+				setErrorShowPopup(true);
 			}
 		});
 	};
 
 	const handleEdit = (event) => {
 		event.preventDefault();
-		const name = event.target.elements.name.value;
-		const category = event.target.elements.category.value;
-		const price = event.target.elements.price.value;
-		const quantity = event.target.elements.quantity.value;
-		const description = event.target.elements.description.value;
+
+		const { name, category, price, quantity, description } =
+			event.target.elements;
 
 		const newProduct = {
-			name,
-			category,
-			price,
-			quantity,
-			description,
+			name: name.value,
+			category: category.value,
+			price: price.value,
+			quantity: quantity.value,
+			description: description.value,
 		};
 
 		fetchData(`products/${id}`, "PUT", newProduct).then((response) => {
 			if (response.status === 200) {
 				closeEditPopup();
 				openSuccessPopup();
+
 				const newProducts = products.map((product) => {
 					if (product._id === id) {
 						return response.data;
 					}
 					return product;
 				});
+
 				setProducts(newProducts);
 			} else {
 				setError(response.data);
-				openErrorPopup();
+				setErrorShowPopup(true);
 			}
 		});
 	};
@@ -201,7 +195,7 @@ const Products = () => {
 				setProducts(newProducts);
 			} else {
 				setError(response.data);
-				openErrorPopup();
+				setErrorShowPopup(true);
 			}
 		});
 	};

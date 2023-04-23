@@ -95,10 +95,6 @@ const Branches = () => {
 		setSuccessShowPopup(false);
 	};
 
-	const openErrorPopup = () => {
-		setErrorShowPopup(true);
-	};
-
 	const closeErrorPopup = () => {
 		setErrorShowPopup(false);
 	};
@@ -128,52 +124,47 @@ const Branches = () => {
 
 	const handleAdd = (event) => {
 		event.preventDefault();
-		const name = event.target.elements.name.value;
-		const address = event.target.elements.address.value;
-		const phoneNumber = event.target.elements.phone.value;
-		const email = event.target.elements.email.value;
-		const manager = event.target.elements.manager.value;
+
+		const { name, address, phone, email, manager } = event.target.elements;
 
 		const newBranch = {
-			name,
-			address,
-			phoneNumber,
-			email,
-			manager,
+			name: name.value,
+			address: address.value,
+			phoneNumber: phone.value,
+			email: email.value,
+			manager: manager.value,
 		};
 
 		fetchData("branches", "POST", newBranch).then((response) => {
 			if (response.status === 200) {
+				closeAddNewPopup();
 				openSuccessPopup();
 				setBranches([...branches, response.data]);
 			} else {
-				setErrorShowPopup(true);
 				setError(response.data);
-				openErrorPopup();
+				setErrorShowPopup(true);
 			}
 		});
 	};
 
 	const handleEdit = (event) => {
 		event.preventDefault();
-		const name = event.target.elements.name.value;
-		const address = event.target.elements.address.value;
-		const phoneNumber = event.target.elements.phone.value;
-		const email = event.target.elements.email.value;
-		const manager = event.target.elements.manager.value;
+
+		const { name, address, phone, email, manager } = event.target.elements;
 
 		const newBranch = {
-			name,
-			address,
-			phoneNumber,
-			email,
-			manager,
+			name: name.value,
+			address: address.value,
+			phoneNumber: phone.value,
+			email: email.value,
+			manager: manager.value,
 		};
 
 		fetchData(`branches/${id}`, "PUT", newBranch).then((response) => {
 			if (response.status === 200) {
 				closeEditPopup();
 				openSuccessPopup();
+
 				const newBranches = branches.map((branch) => {
 					if (branch._id === selectedBranch) {
 						return response.data;
@@ -181,10 +172,11 @@ const Branches = () => {
 						return branch;
 					}
 				});
+
 				setBranches(newBranches);
 			} else {
 				setError(response.data);
-				openErrorPopup();
+				setErrorShowPopup(true);
 			}
 		});
 	};
@@ -201,7 +193,7 @@ const Branches = () => {
 				setBranches(newBranches);
 			} else {
 				setError(response.data);
-				openErrorPopup();
+				setErrorShowPopup(true);
 			}
 		});
 	};

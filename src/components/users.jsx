@@ -57,7 +57,6 @@ const Users = () => {
 
 	useEffect(() => {
 		fetchData("users").then((response) => setUsers(response.data));
-		console.log("Worked!");
 	}, []);
 
 	const openAddNewPopup = () => {
@@ -96,10 +95,6 @@ const Users = () => {
 		setSuccessShowPopup(false);
 	};
 
-	const openErrorPopup = () => {
-		setErrorShowPopup(true);
-	};
-
 	const closeErrorPopup = () => {
 		setErrorShowPopup(false);
 	};
@@ -127,43 +122,38 @@ const Users = () => {
 
 	const handleAdd = (event) => {
 		event.preventDefault();
-		const username = event.target.elements.username.value;
-		const email = event.target.elements.email.value;
-		const password = event.target.elements.password.value;
-		const isAdmin = event.target.elements.isAdmin.checked;
+
+		const { username, email, password, isAdmin } = event.target.elements;
 
 		const newUser = {
-			username,
-			email,
-			isAdmin,
-			password,
+			username: username.value,
+			email: email.value,
+			isAdmin: isAdmin.checked,
+			password: password.value,
 		};
 
 		fetchData("users", "POST", newUser).then((response) => {
 			if (response.status === 200) {
-				openSuccessPopup();
 				closeAddNewPopup();
+				openSuccessPopup();
 				setUsers([...users, response.data]);
 			} else {
-				setErrorShowPopup(true);
 				setError(response.data);
-				openErrorPopup();
+				setErrorShowPopup(true);
 			}
 		});
 	};
 
 	const handleEdit = (event) => {
 		event.preventDefault();
-		const username = event.target.elements.username.value;
-		const email = event.target.elements.email.value;
-		const password = event.target.elements.password.value;
-		const isAdmin = event.target.elements.isAdmin.checked;
+
+		const { username, email, password, isAdmin } = event.target.elements;
 
 		const editedUser = {
-			username,
-			email,
-			isAdmin,
-			password,
+			username: username.value,
+			email: email.value,
+			isAdmin: isAdmin.checked,
+			password: password.value,
 		};
 
 		if (editedUser.password === "") {
@@ -175,6 +165,7 @@ const Users = () => {
 				if (response.status === 200) {
 					closeEditPopup();
 					openSuccessPopup();
+
 					const newUsers = users.map((user) => {
 						if (user._id === selectedUser) {
 							return response.data;
@@ -186,7 +177,7 @@ const Users = () => {
 					setUsers(newUsers);
 				} else {
 					setError(response.data);
-					openErrorPopup();
+					setErrorShowPopup(true);
 				}
 			}
 		);
@@ -194,13 +185,16 @@ const Users = () => {
 
 	const handleDelete = () => {
 		fetchData(`users/${selectedUser}`, "DELETE").then((response) => {
-			if (response.status === 400) {
-				setError(response.data);
-				openErrorPopup();
-			} else {
-				setUsers(users.filter((user) => user._id !== selectedUser));
+			if (response.status === 200) {
 				closeDeletePopup();
 				openSuccessPopup();
+				const newUsers = users.filter(
+					(user) => user._id !== selectedUser
+				);
+				setUsers(newUsers);
+			} else {
+				setError(response.data);
+				setErrorShowPopup(true);
 			}
 		});
 	};
