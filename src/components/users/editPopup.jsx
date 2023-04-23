@@ -50,7 +50,7 @@ const EditPopup = (props) => {
 									name="isAdmin"
 									className="form-check-input"
 									style={{ width: "20px", height: "20px" }}
-									value={isAdmin}
+									checked={isAdmin}
 									onChange={(e) =>
 										onTodoChange(
 											"isAdmin",

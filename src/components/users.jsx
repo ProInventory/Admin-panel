@@ -77,7 +77,7 @@ const Users = () => {
 		setUsername(user.username);
 		setEmail(user.email);
 		setPassword(user.password);
-		if (user.isAdmin) setIsAdmin(user.isAdmin);
+		setIsAdmin(user.isAdmin);
 	};
 
 	const openAddNewPopup = () => {
@@ -135,6 +135,7 @@ const Users = () => {
 		const newUser = {
 			username,
 			email,
+			isAdmin,
 			password,
 		};
 
@@ -160,6 +161,7 @@ const Users = () => {
 		const editedUser = {
 			username,
 			email,
+			isAdmin,
 			password,
 		};
 
@@ -209,10 +211,8 @@ const Users = () => {
 		} else if (what === "password") {
 			setPassword(value);
 		} else if (what === "isAdmin") {
-			setIsAdmin(!value);
+			setIsAdmin(value);
 		}
-
-		console.log(isAdmin);
 	};
 
 	return (
@@ -279,16 +279,16 @@ const Users = () => {
 
 			{showAddNewPopup && (
 				<AddNewPopup
-					onCloseAddNewPopup={closeAddNewPopup}
 					onSubmit={handleSubmitNewUser}
+					onCloseAddNewPopup={closeAddNewPopup}
 				/>
 			)}
 
 			{showEditPopup && (
 				<EditPopup
-					onCloseEditPopup={closeEditPopup}
-					onTodoChange={onTodoChange}
 					onSubmitEditUser={handleSubmitEditUser}
+					onTodoChange={onTodoChange}
+					onCloseEditPopup={closeEditPopup}
 					user={{ id, username, email, isAdmin }}
 				/>
 			)}
