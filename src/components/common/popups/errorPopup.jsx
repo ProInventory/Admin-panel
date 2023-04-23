@@ -1,6 +1,6 @@
 import React from "react";
 
-import Popup from "../common/popup";
+import Popup from "../popup";
 
 const ErrorPopup = (props) => {
 	const { error, onClose } = props;

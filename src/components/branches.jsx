@@ -6,9 +6,9 @@ import fetchData from "./utils/fetchData";
 import Navbar from "./common/navBar";
 import AddNewPopup from "./branches/addNewPopup";
 import EditPopup from "./branches/editPopup";
-import DeletePopup from "./branches/deletePopup";
-import SuccessPopup from "./users/successPopup";
-import ErrorPopup from "./users/errorPopup";
+import DeletePopup from "./common/popups/deletePopup";
+import SuccessPopup from "./common/popups/successPopup";
+import ErrorPopup from "./common/popups/errorPopup";
 
 const BranchesStyle = styled.div`
 	.branches {
@@ -36,6 +36,10 @@ const BranchesStyle = styled.div`
 `;
 
 const Branches = () => {
+	useEffect(() => {
+		fetchData("branches").then((response) => setBranches(response.data));
+	}, []);
+
 	const [id, setId] = useState("");
 	const [name, setName] = useState("");
 	const [address, setAddress] = useState("");
@@ -217,10 +221,6 @@ const Branches = () => {
 		}
 	};
 
-	useEffect(() => {
-		fetchData("branches").then((response) => setBranches(response.data));
-	}, []);
-
 	return (
 		<React.Fragment>
 			<BranchesStyle>
@@ -301,6 +301,7 @@ const Branches = () => {
 			{showDeletePopup && (
 				<DeletePopup
 					id={id}
+					what="branch"
 					onDelete={handleDelete}
 					onClose={closeDeletePopup}
 				/>

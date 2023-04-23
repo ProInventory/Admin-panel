@@ -1,9 +1,9 @@
 import React from "react";
 
-import Popup from "../common/popup";
+import Popup from "../popup";
 
 const DeletePopup = (props) => {
-	const { id, onClose, onDelete } = props;
+	const { id, what, onClose, onDelete } = props;
 
 	return (
 		<React.Fragment>
@@ -11,8 +11,10 @@ const DeletePopup = (props) => {
 				title="Delete Branch"
 				body={
 					<React.Fragment>
-						<p>Are you sure you want to delete this branch?</p>
-						<p>Branch id: {id}</p>
+						<p>Are you sure you want to delete this {what}?</p>
+						<p>
+							{what} id: {id}
+						</p>
 						<button
 							type="button"
 							className="btn btn-primary"

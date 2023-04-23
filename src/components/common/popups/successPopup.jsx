@@ -1,23 +1,23 @@
 import React from "react";
 
-import Popup from "../common/popup";
+import Popup from "../popup";
 
-const ErrorPopup = (props) => {
-	const { error, onClose } = props;
+const SuccessPopup = (props) => {
+	const { onClose } = props;
 
 	return (
 		<React.Fragment>
 			<Popup
-				title="Error"
+				title="Success"
 				body={
 					<React.Fragment>
-						<p>{error}</p>
+						<p>Operation complete</p>
 						<button
 							type="button"
 							className="btn btn-secondary ml-3"
 							onClick={onClose}
 						>
-							Sure
+							Ok
 						</button>
 					</React.Fragment>
 				}
@@ -26,4 +26,4 @@ const ErrorPopup = (props) => {
 	);
 };
 
-export default ErrorPopup;
+export default SuccessPopup;
