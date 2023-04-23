@@ -55,27 +55,6 @@ const Users = () => {
 	const [showSuccessPopup, setSuccessShowPopup] = useState(false);
 	const [showErrorPopup, setErrorShowPopup] = useState(false);
 
-	const changeSelectedUser = (_id) => {
-		setSelectedUser(_id);
-
-		const user = users.find((user) => user._id === _id);
-		if (!user) {
-			setError("User not found");
-			setId("");
-			setUsername("");
-			setEmail("");
-			setPassword("");
-			setIsAdmin(false);
-			return;
-		}
-
-		setId(user._id);
-		setUsername(user.username);
-		setEmail(user.email);
-		setPassword(user.password);
-		setIsAdmin(user.isAdmin);
-	};
-
 	const openAddNewPopup = () => {
 		setAddNewShowPopup(true);
 	};
@@ -85,22 +64,22 @@ const Users = () => {
 	};
 
 	const openEditPopup = (_id) => {
-		changeSelectedUser(_id);
+		changeSelected(_id);
 		setEditShowPopup(true);
 	};
 
 	const closeEditPopup = () => {
-		changeSelectedUser("");
+		changeSelected("");
 		setEditShowPopup(false);
 	};
 
 	const openDeletePopup = (_id) => {
-		changeSelectedUser(_id);
+		changeSelected(_id);
 		setDeleteShowPopup(true);
 	};
 
 	const closeDeletePopup = () => {
-		changeSelectedUser("");
+		changeSelected("");
 		setDeleteShowPopup(false);
 	};
 
@@ -121,7 +100,28 @@ const Users = () => {
 		setErrorShowPopup(false);
 	};
 
-	const handleAddUser = (event) => {
+	const changeSelected = (_id) => {
+		setSelectedUser(_id);
+
+		const user = users.find((user) => user._id === _id);
+		if (!user) {
+			setError("User not found");
+			setId("");
+			setUsername("");
+			setEmail("");
+			setPassword("");
+			setIsAdmin(false);
+			return;
+		}
+
+		setId(user._id);
+		setUsername(user.username);
+		setEmail(user.email);
+		setPassword(user.password);
+		setIsAdmin(user.isAdmin);
+	};
+
+	const handleAdd = (event) => {
 		event.preventDefault();
 		const username = event.target.elements.username.value;
 		const email = event.target.elements.email.value;
@@ -278,10 +278,7 @@ const Users = () => {
 			</UsersStyle>
 
 			{showAddNewPopup && (
-				<AddNewPopup
-					onSubmit={handleAddUser}
-					onClose={closeAddNewPopup}
-				/>
+				<AddNewPopup onSubmit={handleAdd} onClose={closeAddNewPopup} />
 			)}
 
 			{showEditPopup && (

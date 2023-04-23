@@ -63,22 +63,22 @@ const Branches = () => {
 	};
 
 	const openEditPopup = (_id) => {
-		changeSelectedBranch(_id);
+		changeSelected(_id);
 		setEditShowPopup(true);
 	};
 
 	const closeEditPopup = () => {
-		changeSelectedBranch("");
+		changeSelected("");
 		setEditShowPopup(false);
 	};
 
 	const openDeletePopup = (_id) => {
-		changeSelectedBranch(_id);
+		changeSelected(_id);
 		setDeleteShowPopup(true);
 	};
 
 	const closeDeletePopup = () => {
-		changeSelectedBranch("");
+		changeSelected("");
 		setDeleteShowPopup(false);
 	};
 
@@ -100,7 +100,30 @@ const Branches = () => {
 		setErrorShowPopup(false);
 	};
 
-	const handleSubmitNewBranch = (event) => {
+	const changeSelected = (_id) => {
+		setSelectedBranch(_id);
+
+		const branch = branches.find((branch) => branch._id === _id);
+		if (!branch) {
+			setError("Branch not found");
+			setId("");
+			setName("");
+			setAddress("");
+			setPhone("");
+			setEmail("");
+			setManager("");
+			return;
+		}
+
+		setId(branch._id);
+		setName(branch.name);
+		setAddress(branch.address);
+		setPhone(branch.phoneNumber);
+		setEmail(branch.email);
+		setManager(branch.manager);
+	};
+
+	const handleAdd = (event) => {
 		event.preventDefault();
 		const name = event.target.elements.name.value;
 		const address = event.target.elements.address.value;
@@ -128,7 +151,7 @@ const Branches = () => {
 		});
 	};
 
-	const handleSubmitEditBranch = (event) => {
+	const handleEdit = (event) => {
 		event.preventDefault();
 		const name = event.target.elements.name.value;
 		const address = event.target.elements.address.value;
@@ -163,7 +186,7 @@ const Branches = () => {
 		});
 	};
 
-	const handleSubmitDeleteBranch = (event) => {
+	const handleDelete = (event) => {
 		event.preventDefault();
 		fetchData(`branches/${id}`, "DELETE").then((response) => {
 			if (response.status === 200) {
@@ -178,29 +201,6 @@ const Branches = () => {
 				openErrorPopup();
 			}
 		});
-	};
-
-	const changeSelectedBranch = (_id) => {
-		setSelectedBranch(_id);
-
-		const branch = branches.find((branch) => branch._id === _id);
-		if (!branch) {
-			setError("Branch not found");
-			setId("");
-			setName("");
-			setAddress("");
-			setPhone("");
-			setEmail("");
-			setManager("");
-			return;
-		}
-
-		setId(branch._id);
-		setName(branch.name);
-		setAddress(branch.address);
-		setPhone(branch.phoneNumber);
-		setEmail(branch.email);
-		setManager(branch.manager);
 	};
 
 	const handleChange = (what, value) => {
@@ -279,10 +279,7 @@ const Branches = () => {
 				</div>
 			</BranchesStyle>
 			{showAddNewPopup && (
-				<AddNewPopup
-					onSubmit={handleSubmitNewBranch}
-					onClose={closeAddNewPopup}
-				/>
+				<AddNewPopup onSubmit={handleAdd} onClose={closeAddNewPopup} />
 			)}
 
 			{showEditPopup && (
@@ -296,7 +293,7 @@ const Branches = () => {
 						manager,
 					}}
 					onChange={handleChange}
-					onSubmit={handleSubmitEditBranch}
+					onSubmit={handleEdit}
 					onClose={closeEditPopup}
 				/>
 			)}
@@ -304,7 +301,7 @@ const Branches = () => {
 			{showDeletePopup && (
 				<DeletePopup
 					id={id}
-					onDelete={handleSubmitDeleteBranch}
+					onDelete={handleDelete}
 					onClose={closeDeletePopup}
 				/>
 			)}
