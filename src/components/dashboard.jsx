@@ -37,11 +37,15 @@ const Dashboard = () => {
 	const [users, setUsers] = useState([]);
 	const [branches, setBranches] = useState([]);
 	const [products, setProducts] = useState([]);
+	const [deliveries, setDeliveries] = useState([]);
 
 	useEffect(() => {
 		fetchData("users").then((response) => setUsers(response.data));
 		fetchData("branches").then((response) => setBranches(response.data));
 		fetchData("products").then((response) => setProducts(response.data));
+		fetchData("deliveries").then((response) =>
+			setDeliveries(response.data)
+		);
 	}, []);
 
 	return (
@@ -93,7 +97,14 @@ const Dashboard = () => {
 										/>
 									</td>
 									<td>
-										<Box title="Deliveries" body="Lorem" />
+										<Box
+											title="Deliveries"
+											body={
+												<React.Fragment>
+													Total : {deliveries.length}
+												</React.Fragment>
+											}
+										/>
 									</td>
 								</tr>
 							</tbody>
