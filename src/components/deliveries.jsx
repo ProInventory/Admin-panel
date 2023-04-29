@@ -55,6 +55,12 @@ const Deliveries = () => {
 	const [showSuccessPopup, setSuccessShowPopup] = useState(false);
 	const [showErrorPopup, setErrorShowPopup] = useState(false);
 
+	useEffect(() => {
+		fetchData("deliveries").then((response) =>
+			setDeliveries(response.data)
+		);
+	}, []);
+
 	const openAddNewPopup = () => {
 		setAddNewShowPopup(true);
 	};
@@ -217,11 +223,24 @@ const Deliveries = () => {
 		);
 	};
 
-	useEffect(() => {
-		fetchData("deliveries").then((response) =>
-			setDeliveries(response.data)
-		);
-	}, []);
+	const handleChange = (what, value) => {
+		if (what === "fromBranch") {
+			setFromBranch(value);
+		} else if (what === "toBranch") {
+			setToBranch(value);
+		} else if (what === "placedDate") {
+			setDeliveryDate(value);
+		} else if (what === "deliveryDate") {
+			setPlacedDate(value);
+		} else if (what === "status") {
+			setStatus(value);
+		} else if (what === "items") {
+			setItems(value);
+		} else {
+			setError("Something went wrong");
+			setErrorShowPopup(true);
+		}
+	};
 
 	return (
 		<React.Fragment>
@@ -303,7 +322,7 @@ const Deliveries = () => {
 						status,
 						deliveryDate,
 					}}
-					onChange={changeSelected}
+					onChange={handleChange}
 					onSubmit={handleEdit}
 					onClose={closeEditPopup}
 				/>

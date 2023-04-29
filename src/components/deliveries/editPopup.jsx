@@ -1,11 +1,33 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+
+import fetchData from "../utils/fetchData";
 
 import Popup from "../common/popup";
 
+const AddNewPopupStyle = styled.div`
+	select {
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23333'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+		background-repeat: no-repeat;
+		background-position: right 0.7em top 50%, 0 0;
+		background-size: 1.3em auto, 100%;
+		padding-right: 1.5em;
+	}
+`;
+
 const AddNewPopup = (props) => {
+	const [branches, setBranches] = useState([]);
+
 	const { onClose, onChange, onSubmit } = props;
 	const { fromBranch, toBranch, items, placedDate, status, deliveryDate } =
 		props.delivery;
+
+	useEffect(() => {
+		fetchData("branches").then((response) => setBranches(response.data));
+	}, []);
 
 	return (
 		<React.Fragment>
@@ -15,8 +37,7 @@ const AddNewPopup = (props) => {
 					<form onSubmit={onSubmit}>
 						<div className="form-group">
 							<label htmlFor="fromBranch">From:</label>
-							<input
-								type="text"
+							<select
 								id="fromBranch"
 								name="fromBranch"
 								className="form-control"
@@ -24,13 +45,22 @@ const AddNewPopup = (props) => {
 								onChange={(e) =>
 									onChange(e.target.name, e.target.value)
 								}
-							/>
+							>
+								{branches.map((branch) => (
+									<option
+										key={branch._id}
+										value={branch.name}
+									>
+										{branch.name}
+									</option>
+								))}
+							</select>
 						</div>
 
 						<div className="form-group">
 							<label htmlFor="toBranch">To:</label>
-							<input
-								type="text"
+
+							<select
 								id="toBranch"
 								name="toBranch"
 								className="form-control"
@@ -38,7 +68,16 @@ const AddNewPopup = (props) => {
 								onChange={(e) =>
 									onChange(e.target.name, e.target.value)
 								}
-							/>
+							>
+								{branches.map((branch) => (
+									<option
+										key={branch._id}
+										value={branch.name}
+									>
+										{branch.name}
+									</option>
+								))}
+							</select>
 						</div>
 
 						<div className="form-group">
