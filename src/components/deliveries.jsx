@@ -6,6 +6,7 @@ import fetchData from "./utils/fetchData";
 import Navbar from "./common/navBar";
 import AddNewPopup from "./deliveries/addNewPopup";
 import EditPopup from "./deliveries/editPopup";
+import DeletePopup from "./common/popups/deletePopup";
 import SuccessPopup from "./common/popups/successPopup";
 import ErrorPopup from "./common/popups/errorPopup";
 
@@ -197,6 +198,25 @@ const Deliveries = () => {
 		);
 	};
 
+	const handleDelete = (event) => {
+		event.preventDefault();
+
+		fetchData(`deliveries/${selectedDelivery}`, "DELETE").then(
+			(response) => {
+				if (response.status === 200) {
+					const newDeliveries = deliveries.filter(
+						(delivery) => delivery._id !== selectedDelivery
+					);
+					setDeliveries(newDeliveries);
+					openSuccessPopup();
+				} else {
+					setError(response.data);
+					setErrorShowPopup(true);
+				}
+			}
+		);
+	};
+
 	useEffect(() => {
 		fetchData("deliveries").then((response) =>
 			setDeliveries(response.data)
@@ -286,6 +306,15 @@ const Deliveries = () => {
 					onChange={changeSelected}
 					onSubmit={handleEdit}
 					onClose={closeEditPopup}
+				/>
+			)}
+
+			{showDeletePopup && (
+				<DeletePopup
+					id={id}
+					what="Delivery"
+					onDelete={handleDelete}
+					onClose={closeDeletePopup}
 				/>
 			)}
 
