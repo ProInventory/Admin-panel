@@ -53,12 +53,17 @@ const AddNewPopup = (props) => {
 
 						<div className="form-group">
 							<label htmlFor="status">Status:</label>
-							<input
-								type="text"
+							<select
 								id="status"
 								name="status"
 								className="form-control"
-							/>
+							>
+								<option value="Processing">Processing</option>
+								<option value="Pending">Pending</option>
+								<option value="OnTransit">OnTransit</option>
+								<option value="Delivered">Delivered</option>
+								<option value="Completed">Completed</option>
+							</select>
 						</div>
 
 						<div className="form-group">
