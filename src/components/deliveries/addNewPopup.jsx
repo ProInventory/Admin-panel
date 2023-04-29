@@ -8,7 +8,7 @@ const AddNewPopup = (props) => {
 	return (
 		<React.Fragment>
 			<Popup
-				title="Create Product"
+				title="Create Delivery"
 				body={
 					<form onSubmit={onSubmit}>
 						<div className="form-group">
@@ -44,7 +44,7 @@ const AddNewPopup = (props) => {
 						<div className="form-group">
 							<label htmlFor="placedDate">Placed Date:</label>
 							<input
-								type="text"
+								type="date"
 								id="placedDate"
 								name="placedDate"
 								className="form-control"
@@ -55,18 +55,18 @@ const AddNewPopup = (props) => {
 							<label htmlFor="status">Status:</label>
 							<input
 								type="text"
-								id="Status"
-								name="Status"
+								id="status"
+								name="status"
 								className="form-control"
 							/>
 						</div>
 
 						<div className="form-group">
-							<label htmlFor="delivery">Delivery Date:</label>
+							<label htmlFor="deliveryDate">Delivery Date:</label>
 							<input
 								type="date"
-								id="delivery"
-								name="delivery"
+								id="deliveryDate"
+								name="deliveryDate"
 								className="form-control"
 							/>
 						</div>
