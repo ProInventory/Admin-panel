@@ -5,6 +5,7 @@ import fetchData from "./utils/fetchData";
 
 import Navbar from "./common/navBar";
 import AddNewPopup from "./deliveries/addNewPopup";
+import ErrorPopup from "./common/popups/errorPopup";
 
 const DeliveriesStyle = styled.div`
 	.deliveries {
@@ -130,10 +131,12 @@ const Deliveries = () => {
 			deliveryDate,
 		} = event.target.elements;
 
+		let itemsArray = items.value.split(", ");
+
 		const newDelivery = {
-			fromBranch: fromBranch.value,
-			toBranch: toBranch.value,
-			items: items.value,
+			from: fromBranch.value,
+			to: toBranch.value,
+			items: itemsArray,
 			placedDate: placedDate.value,
 			status: status.value,
 			deliveryDate: deliveryDate.value,
@@ -226,6 +229,14 @@ const Deliveries = () => {
 
 			{showAddNewPopup && (
 				<AddNewPopup onSubmit={handleAdd} onClose={closeAddNewPopup} />
+			)}
+
+			{showErrorPopup && (
+				<ErrorPopup
+					error={error}
+					onClose={closeErrorPopup}
+					onConfirm={closeErrorPopup}
+				/>
 			)}
 		</React.Fragment>
 	);
