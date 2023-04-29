@@ -5,6 +5,8 @@ import fetchData from "./utils/fetchData";
 
 import Navbar from "./common/navBar";
 import AddNewPopup from "./deliveries/addNewPopup";
+import EditPopup from "./deliveries/editPopup";
+import SuccessPopup from "./common/popups/successPopup";
 import ErrorPopup from "./common/popups/errorPopup";
 
 const DeliveriesStyle = styled.div`
@@ -111,8 +113,8 @@ const Deliveries = () => {
 		}
 
 		setId(delivery._id);
-		setFromBranch(delivery.fromBranch);
-		setToBranch(delivery.toBranch);
+		setFromBranch(delivery.from);
+		setToBranch(delivery.to);
 		setItems(delivery.items);
 		setPlacedDate(delivery.placedDate);
 		setStatus(delivery.status);
@@ -153,6 +155,48 @@ const Deliveries = () => {
 		});
 	};
 
+	const handleEdit = (event) => {
+		event.preventDefault();
+
+		const {
+			fromBranch,
+			toBranch,
+			items,
+			placedDate,
+			status,
+			deliveryDate,
+		} = event.target.elements;
+
+		let itemsArray = items.value.split(", ");
+
+		const editedDelivery = {
+			from: fromBranch.value,
+			to: toBranch.value,
+			items: itemsArray,
+			placedDate: placedDate.value,
+			status: status.value,
+			deliveryDate: deliveryDate.value,
+		};
+
+		fetchData(`deliveries/${selectedDelivery}`, "PUT", editedDelivery).then(
+			(response) => {
+				if (response.status === 200) {
+					const newDeliveries = deliveries.map((delivery) => {
+						if (delivery._id === selectedDelivery) {
+							return response.data;
+						}
+						return delivery;
+					});
+					setDeliveries(newDeliveries);
+					openSuccessPopup();
+				} else {
+					setError(response.data);
+					setErrorShowPopup(true);
+				}
+			}
+		);
+	};
+
 	useEffect(() => {
 		fetchData("deliveries").then((response) =>
 			setDeliveries(response.data)
@@ -186,14 +230,11 @@ const Deliveries = () => {
 							<tbody>
 								{deliveries.map((delivery) => (
 									<tr key={delivery._id}>
-										<td>{delivery.fromBranch}</td>
-										<td>{delivery.toBranch}</td>
+										<td>{delivery.from}</td>
+										<td>{delivery.to}</td>
 										<td>
 											{delivery.items.map((item) => (
-												<p key={item._id}>
-													{item.name} -{" "}
-													{item.quantity}
-												</p>
+												<p>{item}</p>
 											))}
 										</td>
 										<td>{delivery.placedDate}</td>
@@ -231,6 +272,23 @@ const Deliveries = () => {
 				<AddNewPopup onSubmit={handleAdd} onClose={closeAddNewPopup} />
 			)}
 
+			{showEditPopup && (
+				<EditPopup
+					delivery={{
+						id,
+						fromBranch,
+						toBranch,
+						items,
+						placedDate,
+						status,
+						deliveryDate,
+					}}
+					onChange={changeSelected}
+					onSubmit={handleEdit}
+					onClose={closeEditPopup}
+				/>
+			)}
+
 			{showErrorPopup && (
 				<ErrorPopup
 					error={error}
@@ -238,6 +296,8 @@ const Deliveries = () => {
 					onConfirm={closeErrorPopup}
 				/>
 			)}
+
+			{showSuccessPopup && <SuccessPopup onClose={closeSuccessPopup} />}
 		</React.Fragment>
 	);
 };

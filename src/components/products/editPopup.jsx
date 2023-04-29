@@ -4,7 +4,7 @@ import Popup from "../common/popup";
 
 const EditPopup = (props) => {
 	const { onClose, onChange, onSubmit } = props;
-	const { id, name, category, price, quantity, description } = props.product;
+	const { id, name, category, price, quantity, description } = props.delivery;
 
 	return (
 		<React.Fragment>
