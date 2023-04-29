@@ -8,7 +8,7 @@ const DeletePopup = (props) => {
 	return (
 		<React.Fragment>
 			<Popup
-				title="Delete Branch"
+				title={`Delete ${what}`}
 				body={
 					<React.Fragment>
 						<p>Are you sure you want to delete this {what}?</p>
